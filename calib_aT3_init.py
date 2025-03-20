@@ -225,7 +225,8 @@ if __name__ == "__main__":
 
     for group in group_lists:
         file_path = os.path.join(trackerdata_folder, group + ".csv")
-        tracker_data = pd.read_csv(file_path, sep = ';')
+        tracker_data = pd.read_csv(file_path, sep=';', encoding='ISO-8859-1')
+        # tracker_data = pd.read_csv(file_path, sep = ';')
         X = tracker_data['X  [mm]'].to_list()
         Y = tracker_data['Y  [mm]'].to_list()
         Z = tracker_data['Z  [mm]'].to_list()

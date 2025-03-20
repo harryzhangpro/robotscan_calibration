@@ -70,7 +70,7 @@ def kinematic_forward_eachgroup(pose_group_i, DH_link_4, DH_link_5, DH_link_6, m
         four_T_five = from_dh(DH_link_5[0], DH_link_5[1], DH_link_5[2], DH_link_5[3] + joint_state[4]).type_as(marker_p)
         five_T_six = from_dh(DH_link_6[0], DH_link_6[1], DH_link_6[2], DH_link_6[3] + joint_state[5]).type_as(marker_p)
 
-        a_p = a_T_3 @ three_T_four @ four_T_five @ five_T_six @ torch.cat((marker_p, torch.tensor([1.0]).cuda()), dim=0)
+        a_p = a_T_3 @ three_T_four @ four_T_five @ five_T_six @ torch.cat((marker_p, torch.tensor([1.0])), dim=0)
         a_ps.append(a_p[:3])
 
     a_ps = torch.stack(a_ps)
@@ -94,17 +94,18 @@ if __name__ == '__main__':
 
     # marker position
     ini_p = np.load(init_6p_file)
-    marker_p = Variable(torch.tensor(ini_p.squeeze().tolist(), requires_grad=True).cuda())
+    marker_p = Variable(torch.tensor(ini_p.squeeze().tolist(), requires_grad=True))
+
 
 
     # d  a  alpha  theta
-    DH_link_4 = Variable(torch.tensor([0.2013, 0., -0.5 * np.pi, -0.5 * np.pi], requires_grad=True).cuda())
-    DH_link_5 = Variable(torch.tensor([0.1025, 0., 0.5 * np.pi, 0.], requires_grad=True).cuda())
-    DH_link_6 = Variable(torch.tensor([0.094, 0., 0., 0.], requires_grad=True).cuda())
+    DH_link_4 = Variable(torch.tensor([0.2013, 0., -0.5 * np.pi, -0.5 * np.pi], requires_grad=True))
+    DH_link_5 = Variable(torch.tensor([0.1025, 0., 0.5 * np.pi, 0.], requires_grad=True))
+    DH_link_6 = Variable(torch.tensor([0.094, 0., 0., 0.], requires_grad=True))
 
 
     # poses of joint_3 in each group
-    pose_all_groups = nn.ParameterList([nn.Parameter(torch.randn(7).cuda()) for _ in range(group_num)])    # (tx, ty, tz, w), (x, y, z)
+    pose_all_groups = nn.ParameterList([nn.Parameter(torch.randn(7)) for _ in range(group_num)])    # (tx, ty, tz, w), (x, y, z)
     pose_all_groups = ParameterStack(pose_all_groups, is_param=True)
 
 
@@ -113,8 +114,8 @@ if __name__ == '__main__':
     init_poses = []
     for i in range(group_num):
         init_T_i = ini_Ts[i]
-        init_R_i = torch.from_numpy(init_T_i[:3, :3]).cuda()
-        init_t_i = torch.from_numpy(init_T_i[:3, 3]).cuda()
+        init_R_i = torch.from_numpy(init_T_i[:3, :3])
+        init_t_i = torch.from_numpy(init_T_i[:3, 3])
 
         with torch.no_grad():
             pose_all_groups[i][0:4] = roma.rotmat_to_unitquat(init_R_i)
@@ -126,7 +127,8 @@ if __name__ == '__main__':
     marker_points = []
     for group, i in zip(group_lists, range(group_num)):
         file_path = os.path.join(trackerdata_folder, group + ".csv")
-        tracker_data = pd.read_csv(file_path, sep = ';')
+        tracker_data = pd.read_csv(file_path, sep=';', encoding='ISO-8859-1')
+        # tracker_data = pd.read_csv(file_path, sep = ';')
         X = tracker_data['X  [mm]'].to_list()
         Y = tracker_data['Y  [mm]'].to_list()
         Z = tracker_data['Z  [mm]'].to_list()
@@ -135,7 +137,7 @@ if __name__ == '__main__':
             [[X_i / 1000.0, Y_i / 1000.0, Z_i / 1000.0] for X_i, Y_i, Z_i in
              zip(X[:num_sample_each[i]],
                  Y[:num_sample_each[i]],
-                 Z[:num_sample_each[i]])])).cuda())
+                 Z[:num_sample_each[i]])])))
 
         marker_points.append(marker_point_group.float())
 
@@ -159,7 +161,7 @@ if __name__ == '__main__':
 
                     robot_states_group.append(state)
 
-        robot_state_group = Variable(torch.from_numpy(np.array(robot_states_group[:num_sample_each[i]])).cuda())
+        robot_state_group = Variable(torch.from_numpy(np.array(robot_states_group[:num_sample_each[i]])))
         robot_states.append(robot_state_group)
 
     DH_link_4.requires_grad = True
