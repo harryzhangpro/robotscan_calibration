@@ -1,0 +1,8 @@
+numpy 
+scipy
+pandas
+open3d
+torch
+opencv-python
+visual_kinematics
+roma

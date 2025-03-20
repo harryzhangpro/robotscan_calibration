@@ -1,3 +1,7 @@
+## Change Log
+
+- code modified for macos working.
+
 ## Instruction
 - The code is used for calibrating $^{tracker}T_{Link3}$ and DH parameters of last-three links based on the tracker data and robot kinematics.
 - We denote each set of fixed first-three joints as a **group**. Each **group** relates to a $^{tracker}T_{Link3}$.
@@ -7,11 +11,9 @@
 ### Dependencies (python = 3.8)
 
 Before running the code, use ```pip``` to install the following libraries.
-- pandas
-- open3d
-- torch
-- opencv-python
-- visual_kinematics
+```bash 
+pip install -r requirements.txt
+```
 
 ### Usage
 
