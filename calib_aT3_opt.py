@@ -215,11 +215,3 @@ if __name__ == '__main__':
     print("DH_link_4:", DH_link_4.detach().cpu().numpy())
     print("DH_link_5:", DH_link_5.detach().cpu().numpy())
     print("DH_link_6:", DH_link_6.detach().cpu().numpy())
-
-
-
-
-
-
-
-
